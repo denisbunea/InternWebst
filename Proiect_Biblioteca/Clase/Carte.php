@@ -1,16 +1,14 @@
 <?php
 
 class Carte {
-    //public $id;
     public $titlu;
     public $autor;
     public $gen;
     public $nrPagini;
     public $carteImprumutata;
 
-    function __construct( $titlu,$autor,$gen,$nrPagini,$carteImprumutata)
+    function __construct($titlu,$autor,$gen,$nrPagini,$carteImprumutata)
     {
-//        $this->$id=$id;
         $this->$titlu=$titlu;
         $this->$autor=$autor;
         $this->$gen=$gen;
@@ -18,37 +16,20 @@ class Carte {
         $this->$carteImprumutata=$carteImprumutata;
     }
 
-    
-function insert($titlu,$autor,$gen,$nrPagini,$carteImprumutata){
-    //Conectare::connect();
-    try{
-        $pdo=new PDO('mysql:host=127.0.0.1; dbname=biblioteca', 'root' ,'camera601');
-        
-            echo "<br>Conectare reusita <br>";
-            }catch(PDOException $e){
-            die($e->getMessage());
+    function insert()
+    {
+        $pdo = Conectare::connect();
+
+        if ($pdo) {
+            try{
+                $sql = "INSERT INTO `carte` (`titlu`, `autor`,`gen`, `nrPag`,`carteDisponibila`) VALUES (?,?,?,?,?)";
+                $statement= $pdo->prepare($sql);
+                $statement->execute([$this->titlu,$this->autor,$this->gen,$this->nrPagini,$this->carteImprumutata]);
+                echo 'Sa inserat Cartea <br>';
             }
-    
-    try{
-        
-        $sql = "INSERT INTO `carte` (`titlu`, `autor`,`gen`, `nrPag`,`carteDisponibila`) 
-        VALUES (?,?,?,?,?)";
-        $statement= $pdo->prepare($sql);
-        $statement->execute([$titlu,$autor,$gen,$nrPagini,$carteImprumutata]);
-        echo 'Sa inserat Cartea <br>';
-        }
-        catch(PDOException $e){
-            
-         echo  'Carte existenta';
-    
+            catch(PDOException $e){
+                echo  'Carte existenta';
+            }
         }
     }
 }
-
-
-$Carte1=new Carte('Salut','Miri Oane','Drama',144,1);
-$Carte1->insert('Salut','Miri Oane','Drama',144,1);
-
-
-$Carte2=new Carte('Salut viteaz','Miri Oane','Drama',230,1);
-$Carte2->insert('Salut viteaz','Miri Oane','Drama',230,1);
